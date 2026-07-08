@@ -1,0 +1,14 @@
+.. |extension_key| replace:: ns_t3af_extended
+.. |extension_name| replace:: AI Foundation T3AF Extended
+.. |vendor| replace:: NITSAN
+
+.. role:: php(code)
+   :language: php
+
+.. role:: yaml(code)
+   :language: yaml
+
+.. role:: bash(code)
+   :language: bash
+
+.. default-role:: code

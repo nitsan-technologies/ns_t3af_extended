@@ -1,0 +1,27 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  NITSAN\NsT3afExtended\:
+    resource: '../Classes/*'
+    exclude:
+      - '../Classes/Prompt/*'
+      - '../Classes/Service/Ai/*'
+      - '../Classes/Feature/*'
+      - '../Classes/Mcp/*'
+      - '../Classes/Access/*'
+      - '../Classes/Provider/*'
+
+  _instanceof:
+    NITSAN\NsT3AF\Provider\Contract\AdapterInterface:
+      tags: ['nst3af.adapter']
+    NITSAN\NsT3AF\Contract\AiAccessCatalogProviderInterface:
+      tags: ['t3af.ai_access_catalog_provider']
+
+  NITSAN\NsT3afExtended\Provider\:
+    resource: '../Classes/Provider/*'
+
+  NITSAN\NsT3afExtended\Access\:
+    resource: '../Classes/Access/*'

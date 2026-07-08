@@ -1,0 +1,11 @@
+# cat=t3af extended//01; type=boolean; label=Enable demo AI features
+enableExtendedAi = 0
+
+# cat=t3af extended//02; type=options[concise, detailed]; label=Summary tone
+summaryTone = concise
+
+# cat=t3af extended//03; type=string; label=Greeting prefix for echo MCP tool
+greetingPrefix = Hello from T3AF Extended
+
+# cat=t3af extended//04; type=string; label=Default AI provider for demo features (inherit = default)
+defaultProviderForExtended = default

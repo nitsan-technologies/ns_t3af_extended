@@ -1,0 +1,33 @@
+{
+    "name": "nitsan/ns-t3af-extended",
+    "type": "typo3-cms-extension",
+    "description": "Reference implementation of all EXT:ns_t3af integration hooks for third-party extension developers.",
+    "license": "GPL-2.0-or-later",
+    "keywords": [
+        "TYPO3 CMS",
+        "NITSAN",
+        "AI Foundation",
+        "Extended",
+        "Reference"
+    ],
+    "require": {
+        "typo3/cms-core": "^13.4 || ^14.3",
+        "php": ">=8.2"
+    },
+    "suggest": {
+        "nitsan/ns-t3af": "AI Foundation — required for AI Features, Prompts, MCP tools, providers, and access integration demos"
+    },
+    "autoload": {
+        "psr-4": {
+            "NITSAN\\NsT3afExtended\\": "Classes"
+        }
+    },
+    "replace": {
+        "nitsan/ns-t3af-extended": "self.version"
+    },
+    "extra": {
+        "typo3/cms": {
+            "extension-key": "ns_t3af_extended"
+        }
+    }
+}

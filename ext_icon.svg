@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Developer Demo">
+  <rect width="64" height="64" rx="12" fill="#10b981"/>
+  <text x="32" y="40" text-anchor="middle" font-family="monospace" font-size="22" fill="#ffffff">&lt;/&gt;</text>
+</svg>
