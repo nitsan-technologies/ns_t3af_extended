@@ -4,11 +4,17 @@ declare(strict_types=1);
 
 namespace NITSAN\NsT3afExtended\Feature;
 
+use NITSAN\NsT3AF\Contract\ExtensionSettingsScopeMessagesTrait;
 use NITSAN\NsT3AF\Contract\ExtensionSettingsScopeProviderInterface;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 
+/**
+ * Sample {@see ExtensionSettingsScopeProviderInterface} for EXT:ns_t3af_extended.
+ */
 final class T3afExtendedExtensionSettingsScopeProvider implements ExtensionSettingsScopeProviderInterface
 {
+    use ExtensionSettingsScopeMessagesTrait;
+
     private const EXTENSION_KEY = 'ns_t3af_extended';
 
     private const SETTINGS_SCOPE = 't3af extended';

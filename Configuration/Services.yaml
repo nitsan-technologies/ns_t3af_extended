@@ -8,20 +8,16 @@ services:
     resource: '../Classes/*'
     exclude:
       - '../Classes/Prompt/*'
-      - '../Classes/Service/Ai/*'
+      - '../Classes/Service/*'
       - '../Classes/Feature/*'
       - '../Classes/Mcp/*'
       - '../Classes/Access/*'
       - '../Classes/Provider/*'
 
+  # Tag rules apply when Services.php loads Provider/Access classes.
+  # ns_t3af’s own _instanceof does not cover foreign packages.
   _instanceof:
     NITSAN\NsT3AF\Provider\Contract\AdapterInterface:
       tags: ['nst3af.adapter']
     NITSAN\NsT3AF\Contract\AiAccessCatalogProviderInterface:
       tags: ['t3af.ai_access_catalog_provider']
-
-  NITSAN\NsT3afExtended\Provider\:
-    resource: '../Classes/Provider/*'
-
-  NITSAN\NsT3afExtended\Access\:
-    resource: '../Classes/Access/*'

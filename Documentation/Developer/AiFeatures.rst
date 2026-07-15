@@ -99,10 +99,13 @@ Declare which scopes your extension owns so ns_t3af can filter palettes and save
 
    namespace NITSAN\NsT3afExtended\Feature;
 
+   use NITSAN\NsT3AF\Contract\ExtensionSettingsScopeMessagesTrait;
    use NITSAN\NsT3AF\Contract\ExtensionSettingsScopeProviderInterface;
 
    final class T3afExtendedExtensionSettingsScopeProvider implements ExtensionSettingsScopeProviderInterface
    {
+       use ExtensionSettingsScopeMessagesTrait;
+
        private const SETTINGS_SCOPE = 't3af extended';
 
        public function getAllowedScopes(): array
@@ -111,6 +114,8 @@ Declare which scopes your extension owns so ns_t3af can filter palettes and save
        }
 
        // ... getCompositeScopeCategories(), getPaletteScopes(), getFieldFilterScopes()
+       // ExtensionSettingsScopeMessagesTrait supplies getSaveSuccessMessageKey()
+       // and getUnavailableLabelKey().
    }
 
 Example: Provider override dropdown

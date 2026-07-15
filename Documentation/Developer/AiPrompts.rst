@@ -69,19 +69,22 @@ contracts with custom database rows.
    namespace NITSAN\NsT3afExtended\Prompt;
 
    use NITSAN\NsT3afExtended\Service\Ai\PromptContractRegistry;
+   use NITSAN\NsT3AF\Contract\PromptCatalogPolicyTrait;
    use NITSAN\NsT3AF\Contract\PromptCatalogProviderInterface;
    use NITSAN\NsT3AF\Contract\PromptCategoryDescriptor;
    use NITSAN\NsT3AF\Prompt\AiPromptRepository;
    use NITSAN\NsT3AF\Prompt\Support\PromptContractCatalogSupport;
-   use TYPO3\CMS\Core\Utility\GeneralUtility;
 
    final class T3afExtendedPromptCatalogProvider implements PromptCatalogProviderInterface
    {
+       use PromptCatalogPolicyTrait;
+
        private const EXTENSION_KEY = 'ns_t3af_extended';
        private const CATEGORY_ID = 't3af_extended_prompts';
 
        public function __construct(
            private readonly AiPromptRepository $aiPromptRepository,
+           private readonly PromptContractRegistry $promptContractRegistry,
        ) {}
 
        public function isAvailable(): bool
@@ -110,12 +113,14 @@ contracts with custom database rows.
        public function buildUiCatalog(): array
        {
            return PromptContractCatalogSupport::buildUiCatalogFromRegistry(
-               GeneralUtility::makeInstance(PromptContractRegistry::class),
+               $this->promptContractRegistry,
                ['demo' => 'Extended prompts'],
            );
        }
 
        // ... getPromptRowsForCategory(), validateGlobalPrompt(), supportsCategory()
+       // PromptCatalogPolicyTrait supplies requiresSiteStorage(), resolveStoragePidForRecord(),
+       // resolvePromptKind(), and isSidebarCategory().
    }
 
 Example: Resolve prompt text at runtime

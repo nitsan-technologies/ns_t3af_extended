@@ -8,10 +8,14 @@ AI Access registers module cards, feature permission bits, and record ACL rows f
 **AI Foundation → AI Access / Roles**. Implement :php:`AiAccessCatalogProviderInterface`
 and tag it with ``t3af.ai_access_catalog_provider``.
 
+This demo is **catalog-only**: ``groupMod: nitsan_nst3afextended`` appears in the
+Roles wizard without a registered backend module. Production products usually pair
+the catalog with a real module; integrators can copy the catalog alone for ACL bits.
+
 Example: Module card and feature permissions
 ============================================
 
-Feature bits map to ``T3Ai:*`` permissions assignable via ``be_groups`` or the
+Feature bits map to ``T3afExtended:*`` permissions assignable via ``be_groups`` or the
 optional access wizard.
 
 .. code-block:: php

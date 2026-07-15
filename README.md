@@ -14,9 +14,8 @@ vendor/bin/typo3 extension:activate ns_t3af ns_t3af_extended
 vendor/bin/typo3 cache:flush
 ```
 
-`composer.json` lists ns_t3af under `suggest` (optional at install time) but it is
-**required in practice** for every integration hook. Child extensions copying these
-patterns should use `"require": { "nitsan/ns-t3af": "^1.0" }`.
+`composer.json` requires `nitsan/ns-t3af` (`^1.0`). Child extensions copying these
+patterns should do the same.
 
 ---
 
@@ -25,8 +24,9 @@ patterns should use `"require": { "nitsan/ns-t3af": "^1.0" }`.
 ## Dependency injection
 
 Third-party extensions register ns_t3af hooks in their own DI configuration.
-This extension uses `Services.yaml` for adapters and access, and `Services.php`
-for conditional tags when ns_t3af interfaces are available.
+This extension keeps tag rules in `Services.yaml` and loads Provider, Access,
+Prompts, Features, MCP, and runtime AI services from `Services.php` only when
+the matching ns_t3af interfaces exist.
 
 ```yaml
 # packages/ns_t3af_extended/Configuration/Services.yaml
@@ -41,16 +41,18 @@ services:
       tags: ['nst3af.adapter']
     NITSAN\NsT3AF\Contract\AiAccessCatalogProviderInterface:
       tags: ['t3af.ai_access_catalog_provider']
-
-  NITSAN\NsT3afExtended\Provider\:
-    resource: '../Classes/Provider/*'
-
-  NITSAN\NsT3afExtended\Access\:
-    resource: '../Classes/Access/*'
 ```
-
 ```php
 // packages/ns_t3af_extended/Configuration/Services.php
+if (interface_exists(\NITSAN\NsT3AF\Provider\Contract\AdapterInterface::class)) {
+    $services->load('NITSAN\\NsT3afExtended\\Provider\\', __DIR__ . '/../Classes/Provider/');
+}
+if (interface_exists(\NITSAN\NsT3AF\Contract\AiAccessCatalogProviderInterface::class)) {
+    $services->load('NITSAN\\NsT3afExtended\\Access\\', __DIR__ . '/../Classes/Access/');
+}
+if (interface_exists(\NITSAN\NsT3AF\Api\AiServiceInterface::class)) {
+    $services->set(T3afExtendedAiService::class);
+}
 if (interface_exists(\NITSAN\NsT3AF\Contract\PromptCatalogProviderInterface::class)) {
     $services->load('NITSAN\\NsT3afExtended\\Prompt\\', __DIR__ . '/../Classes/Prompt/')
         ->tag('t3af.prompt_catalog_provider');
@@ -122,6 +124,7 @@ final class T3afExtendedAdapter implements AdapterInterface
 
 Register built-in prompt contracts in PHP and expose them via
 `PromptCatalogProviderInterface` (tag: `t3af.prompt_catalog_provider`).
+Use `PromptCatalogPolicyTrait` for the storage-policy methods required by current ns_t3af.
 
 ```php
 // packages/ns_t3af_extended/Classes/Service/Ai/PromptContractRegistry.php
@@ -137,11 +140,28 @@ private const CONTRACTS = [
 
 ```php
 // packages/ns_t3af_extended/Classes/Service/Ai/PromptResolver.php
-public function resolveText(string $promptType, ?string $explicitPromptText = null): string
-{
+public function resolveText(
+    string $promptType,
+    ?string $explicitPromptText = null,
+    ?string $configuredPromptTitle = null,
+): string {
     if ($explicitPromptText !== null && trim($explicitPromptText) !== '') {
         return trim($explicitPromptText);
     }
+
+    if ($configuredPromptTitle !== null && trim($configuredPromptTitle) !== '') {
+        $fromDatabase = $this->aiPromptRepository->findPromptTextByTypeAndTitle(
+            'ns_t3af_extended',
+            $this->promptContractRegistry->getScope($promptType),
+            $promptType,
+            trim($configuredPromptTitle),
+            0,
+        );
+        if ($fromDatabase !== null && $fromDatabase !== '') {
+            return $fromDatabase;
+        }
+    }
+
     return $this->promptContractRegistry->getDefaultText($promptType);
 }
 ```
@@ -154,6 +174,7 @@ public function resolveText(string $promptType, ?string $explicitPromptText = nu
 
 Per-site settings use a TypoScript field schema, a card provider, scope provider,
 provider-override dropdown, and optional dynamic defaults.
+Scope providers should use `ExtensionSettingsScopeMessagesTrait` for drawer label keys.
 
 ```typoscript
 # packages/ns_t3af_extended/Configuration/ExtensionSettings/fields.typoscript
@@ -185,6 +206,7 @@ return [
 
 Register module cards, feature bits, and record ACL via
 `AiAccessCatalogProviderInterface` (tag: `t3af.ai_access_catalog_provider`).
+This demo is **catalog-only** (no backend module) — enough for the Roles wizard.
 
 ```php
 // packages/ns_t3af_extended/Classes/Access/T3afExtendedAccessCatalogProvider.php
@@ -206,7 +228,8 @@ return [
 ## MCP tools
 
 Annotate handler methods with `#[McpTool]` and `#[McpToolOwner]`, then tag services
-with `mcp.tool` (`public: true`).
+with `mcp.tool` (`public: true`). Skill metadata lives in
+`Resources/Private/Skills/t3af-extended-skill.md`.
 
 ```php
 // packages/ns_t3af_extended/Classes/Mcp/Tool/EchoTool.php
@@ -239,4 +262,3 @@ return $this->aiService->complete($prompt, $options)->content;
 ```
 
 ---
-

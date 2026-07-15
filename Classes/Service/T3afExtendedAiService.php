@@ -16,8 +16,6 @@ final class T3afExtendedAiService
 {
     private const EXTENSION_KEY = 'ns_t3af_extended';
 
-    private const SETTINGS_SCOPE = 't3af extended';
-
     public function __construct(
         private readonly AiServiceInterface $aiService,
         private readonly ExtensionSettingsService $extensionSettingsService,

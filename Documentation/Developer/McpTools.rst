@@ -127,6 +127,8 @@ The card groups tools by ``toolPrefix`` in **AI Foundation → MCP Tools**.
                tagline: 'Reference MCP tools for AI Foundation integrators — echo (non-AI) and summarize (AI).',
                skillName: 'T3AF Extended Assistant',
                skillTrigger: '/t3af-extended',
+               skillFile: 't3af-extended-skill.md',
+               skillDesc: 'Sample MCP tools shipped with EXT:ns_t3af_extended.',
                toolPrefix: 't3af_extended_',
                sortPriority: 5,
            );
@@ -136,4 +138,5 @@ The card groups tools by ``toolPrefix`` in **AI Foundation → MCP Tools**.
    }
 
 Verify under **AI Foundation → MCP Tools** — card **T3AF Extended** lists
-``t3af_extended_echo`` and ``t3af_extended_summarize``.
+``t3af_extended_echo`` and ``t3af_extended_summarize``. Skill markdown lives at
+:file:`Resources/Private/Skills/t3af-extended-skill.md`.

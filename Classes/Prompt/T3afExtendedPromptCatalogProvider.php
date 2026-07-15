@@ -5,18 +5,20 @@ declare(strict_types=1);
 namespace NITSAN\NsT3afExtended\Prompt;
 
 use NITSAN\NsT3afExtended\Service\Ai\PromptContractRegistry;
+use NITSAN\NsT3AF\Contract\PromptCatalogPolicyTrait;
 use NITSAN\NsT3AF\Contract\PromptCatalogProviderInterface;
 use NITSAN\NsT3AF\Contract\PromptCategoryDescriptor;
 use NITSAN\NsT3AF\Prompt\AiPromptRepository;
 use NITSAN\NsT3AF\Prompt\Support\PromptContractCatalogSupport;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Sample {@see PromptCatalogProviderInterface} for EXT:ns_t3af_extended.
  */
 final class T3afExtendedPromptCatalogProvider implements PromptCatalogProviderInterface
 {
+    use PromptCatalogPolicyTrait;
+
     private const EXTENSION_KEY = 'ns_t3af_extended';
 
     private const CATEGORY_ID = 't3af_extended_prompts';
@@ -39,6 +41,7 @@ final class T3afExtendedPromptCatalogProvider implements PromptCatalogProviderIn
 
     public function __construct(
         private readonly AiPromptRepository $aiPromptRepository,
+        private readonly PromptContractRegistry $promptContractRegistry,
     ) {}
 
     public function isAvailable(): bool
@@ -109,7 +112,7 @@ final class T3afExtendedPromptCatalogProvider implements PromptCatalogProviderIn
     public function buildUiCatalog(): array
     {
         return PromptContractCatalogSupport::buildUiCatalogFromRegistry(
-            GeneralUtility::makeInstance(PromptContractRegistry::class),
+            $this->promptContractRegistry,
             self::SCOPE_LABELS,
         );
     }
@@ -121,7 +124,6 @@ final class T3afExtendedPromptCatalogProvider implements PromptCatalogProviderIn
         }
 
         $scope = $this->resolveCategoryScope($categoryId);
-        $registry = GeneralUtility::makeInstance(PromptContractRegistry::class);
 
         $builtinRows = array_map(static fn(array $row): array => [
             'uid' => (int) $row['uid'],
@@ -131,7 +133,7 @@ final class T3afExtendedPromptCatalogProvider implements PromptCatalogProviderIn
             'promptTitle' => (string) $row['prompt_title'],
             'promptText' => (string) $row['prompt_text'],
             'isBuiltin' => true,
-        ], PromptContractCatalogSupport::getBuiltinPromptRowsForScope($registry, $scope));
+        ], PromptContractCatalogSupport::getBuiltinPromptRowsForScope($this->promptContractRegistry, $scope));
 
         $customRows = array_map(static fn(array $row): array => [
             'uid' => (int) $row['uid'],
@@ -149,7 +151,7 @@ final class T3afExtendedPromptCatalogProvider implements PromptCatalogProviderIn
     public function validateGlobalPrompt(string $categoryId, string $promptType, string $scope, string $promptText): ?string
     {
         return PromptContractCatalogSupport::validateGlobalPrompt(
-            GeneralUtility::makeInstance(PromptContractRegistry::class),
+            $this->promptContractRegistry,
             $promptType,
             $scope,
             $promptText,

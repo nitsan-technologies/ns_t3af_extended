@@ -12,10 +12,8 @@
     ],
     "require": {
         "typo3/cms-core": "^13.4 || ^14.3",
-        "php": ">=8.2"
-    },
-    "suggest": {
-        "nitsan/ns-t3af": "AI Foundation — required for AI Features, Prompts, MCP tools, providers, and access integration demos"
+        "php": ">=8.2",
+        "nitsan/ns-t3af": "^1.0 || @dev"
     },
     "autoload": {
         "psr-4": {
