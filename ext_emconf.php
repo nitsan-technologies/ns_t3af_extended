@@ -12,10 +12,9 @@ $EM_CONF['ns_t3af_extended'] = [
     'constraints' => [
         'depends' => [
             'typo3' => '13.4.0-14.9.99',
+            'ns_t3af' => '1.0.0-1.99.99',
         ],
         'conflicts' => [],
-        'suggests' => [
-            'ns_t3af' => '',
-        ],
+        'suggests' => [],
     ],
 ];

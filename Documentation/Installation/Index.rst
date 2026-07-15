@@ -4,9 +4,8 @@
 Installation
 ============
 
-Install |extension_name| alongside **EXT:ns_t3af** (AI Foundation). The demo
-extension is optional at Composer level (``suggest``) but **required in practice**
-for every integration hook to register and appear in the backend.
+Install |extension_name| alongside **EXT:ns_t3af** (AI Foundation). This package
+``require``\ s ``nitsan/ns-t3af`` — activate both extensions before verifying backend cards.
 
 Example: Install via Composer
 =============================
@@ -28,33 +27,18 @@ after pulling changes.
 Example: Composer dependency declaration
 ======================================
 
-Child extensions that copy patterns from this demo should declare a hard
-``require`` on ns_t3af. The demo itself uses ``suggest`` so it can be installed
-standalone for inspection.
-
 .. code-block:: json
    :caption: packages/ns_t3af_extended/composer.json
 
    {
        "require": {
            "typo3/cms-core": "^13.4 || ^14.3",
-           "php": ">=8.2"
-       },
-       "suggest": {
-           "nitsan/ns-t3af": "AI Foundation — required for AI Features, Prompts, MCP tools, providers, and access integration demos"
-       }
-   }
-
-When copying into your own extension, prefer:
-
-.. code-block:: json
-   :caption: packages/my_extension/composer.json
-
-   {
-       "require": {
+           "php": ">=8.2",
            "nitsan/ns-t3af": "^1.0"
        }
    }
+
+When copying patterns into your own extension, keep the same hard ``require``.
 
 System requirements
 ===================

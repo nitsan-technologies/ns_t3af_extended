@@ -5,12 +5,12 @@ Dependency injection
 =====================
 
 Third-party extensions must register ns_t3af integration services in **their own**
-DI configuration. This extension splits registration across
-:file:`Configuration/Services.yaml` (always loaded) and
-:file:`Configuration/Services.php` (conditional tags when ns_t3af interfaces exist).
+DI configuration. This extension keeps ``_instanceof`` tag rules in
+:file:`Configuration/Services.yaml` and loads all integrator services from
+:file:`Configuration/Services.php` only when the matching ns_t3af interfaces exist.
 
-Example: Base services and adapter tagging
-==========================================
+Example: Tag rules (Services.yaml)
+==================================
 
 Tag :php:`AdapterInterface` and :php:`AiAccessCatalogProviderInterface` in your
 extension — the ``_instanceof`` rules in EXT:ns_t3af apply only to services defined
@@ -29,7 +29,7 @@ inside ns_t3af.
        resource: '../Classes/*'
        exclude:
          - '../Classes/Prompt/*'
-         - '../Classes/Service/Ai/*'
+         - '../Classes/Service/*'
          - '../Classes/Feature/*'
          - '../Classes/Mcp/*'
          - '../Classes/Access/*'
@@ -41,17 +41,11 @@ inside ns_t3af.
        NITSAN\NsT3AF\Contract\AiAccessCatalogProviderInterface:
          tags: ['t3af.ai_access_catalog_provider']
 
-     NITSAN\NsT3afExtended\Provider\:
-       resource: '../Classes/Provider/*'
-
-     NITSAN\NsT3afExtended\Access\:
-       resource: '../Classes/Access/*'
-
 Example: Conditional registration when ns_t3af is loaded
 ========================================================
 
-Prompt, Feature, and MCP providers are registered only when the matching ns_t3af
-interface is available. MCP tool handlers must be ``public: true``.
+Provider, Access, Prompts, Features, MCP, and runtime AI are registered only when
+the matching ns_t3af interface is available. MCP tool handlers must be ``public: true``.
 
 .. code-block:: php
    :caption: packages/ns_t3af_extended/Configuration/Services.php
@@ -65,6 +59,7 @@ interface is available. MCP tool handlers must be ``public: true``.
    use NITSAN\NsT3afExtended\Feature\T3afExtendedExtensionSettingsScopeProvider;
    use NITSAN\NsT3afExtended\Feature\T3afExtendedFeatureProviderFormOptions;
    use NITSAN\NsT3afExtended\Mcp\T3afExtendedMcpToolsExtensionCardProvider;
+   use NITSAN\NsT3afExtended\Service\T3afExtendedAiService;
    use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
    return static function (ContainerConfigurator $containerConfigurator): void {
@@ -72,6 +67,18 @@ interface is available. MCP tool handlers must be ``public: true``.
            ->defaults()
            ->autowire()
            ->autoconfigure();
+
+       if (interface_exists(\NITSAN\NsT3AF\Provider\Contract\AdapterInterface::class)) {
+           $services->load('NITSAN\\NsT3afExtended\\Provider\\', __DIR__ . '/../Classes/Provider/');
+       }
+
+       if (interface_exists(\NITSAN\NsT3AF\Contract\AiAccessCatalogProviderInterface::class)) {
+           $services->load('NITSAN\\NsT3afExtended\\Access\\', __DIR__ . '/../Classes/Access/');
+       }
+
+       if (interface_exists(\NITSAN\NsT3AF\Api\AiServiceInterface::class)) {
+           $services->set(T3afExtendedAiService::class);
+       }
 
        if (interface_exists(\NITSAN\NsT3AF\Contract\PromptCatalogProviderInterface::class)) {
            $services->load('NITSAN\\NsT3afExtended\\Prompt\\', __DIR__ . '/../Classes/Prompt/')

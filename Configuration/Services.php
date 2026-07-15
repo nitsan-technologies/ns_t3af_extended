@@ -7,6 +7,7 @@ use NITSAN\NsT3afExtended\Feature\T3afExtendedExtensionSettingsDynamicDefaultsPr
 use NITSAN\NsT3afExtended\Feature\T3afExtendedExtensionSettingsScopeProvider;
 use NITSAN\NsT3afExtended\Feature\T3afExtendedFeatureProviderFormOptions;
 use NITSAN\NsT3afExtended\Mcp\T3afExtendedMcpToolsExtensionCardProvider;
+use NITSAN\NsT3afExtended\Service\T3afExtendedAiService;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
 return static function (ContainerConfigurator $containerConfigurator): void {
@@ -14,6 +15,18 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->defaults()
         ->autowire()
         ->autoconfigure();
+
+    if (interface_exists(\NITSAN\NsT3AF\Provider\Contract\AdapterInterface::class)) {
+        $services->load('NITSAN\\NsT3afExtended\\Provider\\', __DIR__ . '/../Classes/Provider/');
+    }
+
+    if (interface_exists(\NITSAN\NsT3AF\Contract\AiAccessCatalogProviderInterface::class)) {
+        $services->load('NITSAN\\NsT3afExtended\\Access\\', __DIR__ . '/../Classes/Access/');
+    }
+
+    if (interface_exists(\NITSAN\NsT3AF\Api\AiServiceInterface::class)) {
+        $services->set(T3afExtendedAiService::class);
+    }
 
     if (interface_exists(\NITSAN\NsT3AF\Contract\PromptCatalogProviderInterface::class)) {
         $services->load('NITSAN\\NsT3afExtended\\Prompt\\', __DIR__ . '/../Classes/Prompt/')

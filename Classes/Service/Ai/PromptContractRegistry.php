@@ -55,6 +55,11 @@ final class PromptContractRegistry
         return self::CONTRACTS[$promptType]['defaultText'] ?? '';
     }
 
+    public function getLabel(string $promptType): string
+    {
+        return self::CONTRACTS[$promptType]['label'] ?? '';
+    }
+
     /**
      * @return list<string>
      */
