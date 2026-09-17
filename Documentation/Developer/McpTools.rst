@@ -99,6 +99,32 @@ AI tools implement :php:`McpToolHandlerInterface` and delegate to
        }
    }
 
+Example: Summarize into tt_content and bind AI Label
+====================================================
+
+``t3af_extended_summarize_content`` writes the summary to an existing content
+element and binds AI Label in the same request. See :doc:`AiLabel`.
+
+.. code-block:: php
+   :caption: packages/ns_t3af_extended/Classes/Mcp/Tool/SummarizeContentTool.php
+
+   #[McpTool(
+       name: 't3af_extended_summarize_content',
+       description: 'Summarize into an existing tt_content element and bind AI Label (demo for EXT:ns_t3af_extended).',
+   )]
+   #[McpToolOwner(extensionKey: 'ns_t3af_extended')]
+   public function execute(int $contentUid, string $text = '', string $tone = 'concise'): string
+   {
+       $result = $this->summarizeAndBindService->summarizeAndBind($contentUid, $text, $tone);
+
+       return json_encode([
+           'uid' => $result['uid'],
+           'summary' => $result['summary'],
+           'bound' => $result['bound'],
+           'tool' => 't3af_extended_summarize_content',
+       ], JSON_THROW_ON_ERROR);
+   }
+
 Example: MCP Tools backend card
 ===============================
 
@@ -124,7 +150,7 @@ The card groups tools by ``toolPrefix`` in **AI Foundation → MCP Tools**.
                label: 'T3AF Extended',
                icon: '🧪',
                iconIdentifier: 'actions-code',
-               tagline: 'Reference MCP tools for AI Foundation integrators — echo (non-AI) and summarize (AI).',
+               tagline: 'Reference MCP tools — echo, summarize, and summarize-into-content (AI Label bind).',
                skillName: 'T3AF Extended Assistant',
                skillTrigger: '/t3af-extended',
                skillFile: 't3af-extended-skill.md',
@@ -138,5 +164,6 @@ The card groups tools by ``toolPrefix`` in **AI Foundation → MCP Tools**.
    }
 
 Verify under **AI Foundation → MCP Tools** — card **T3AF Extended** lists
-``t3af_extended_echo`` and ``t3af_extended_summarize``. Skill markdown lives at
+``t3af_extended_echo``, ``t3af_extended_summarize``, and
+``t3af_extended_summarize_content``. Skill markdown lives at
 :file:`Resources/Private/Skills/t3af-extended-skill.md`.

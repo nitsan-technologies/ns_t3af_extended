@@ -54,6 +54,7 @@ Prerequisites
    Developer/AiAccess
    Developer/McpTools
    Developer/RuntimeAiCalls
+   Developer/AiLabel
 
 .. toctree::
    :maxdepth: 1

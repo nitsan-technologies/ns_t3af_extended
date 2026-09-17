@@ -2,12 +2,14 @@
 
 declare(strict_types=1);
 
+use NITSAN\NsT3afExtended\AiLabel\T3afExtendedAiLabelBinder;
 use NITSAN\NsT3afExtended\Feature\T3afExtendedAiFeatureCardProvider;
 use NITSAN\NsT3afExtended\Feature\T3afExtendedExtensionSettingsDynamicDefaultsProvider;
 use NITSAN\NsT3afExtended\Feature\T3afExtendedExtensionSettingsScopeProvider;
 use NITSAN\NsT3afExtended\Feature\T3afExtendedFeatureProviderFormOptions;
 use NITSAN\NsT3afExtended\Mcp\T3afExtendedMcpToolsExtensionCardProvider;
 use NITSAN\NsT3afExtended\Service\T3afExtendedAiService;
+use NITSAN\NsT3afExtended\Service\T3afExtendedSummarizeAndBindService;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
 return static function (ContainerConfigurator $containerConfigurator): void {
@@ -26,6 +28,8 @@ return static function (ContainerConfigurator $containerConfigurator): void {
 
     if (interface_exists(\NITSAN\NsT3AF\Api\AiServiceInterface::class)) {
         $services->set(T3afExtendedAiService::class);
+        $services->set(T3afExtendedAiLabelBinder::class);
+        $services->set(T3afExtendedSummarizeAndBindService::class);
     }
 
     if (interface_exists(\NITSAN\NsT3AF\Contract\PromptCatalogProviderInterface::class)) {

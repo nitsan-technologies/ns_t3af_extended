@@ -42,6 +42,8 @@ final class T3afExtendedAiService
         );
 
         $response = $this->aiService->complete($prompt, $options);
+        // Capture is automatic on AiServiceInterface. Bind at persist time via
+        // T3afExtendedSummarizeAndBindService / T3afExtendedAiLabelBinder.
 
         return $response->content;
     }
@@ -52,7 +54,7 @@ final class T3afExtendedAiService
     private function readSettings(): array
     {
         try {
-            return $this->extensionSettingsService->getAll(self::EXTENSION_KEY, 0);
+            return $this->extensionSettingsService->getAllIgnorePid(self::EXTENSION_KEY);
         } catch (\Throwable) {
             return AiUniverseUtilityHelper::getExtensionConf(self::EXTENSION_KEY);
         }

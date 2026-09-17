@@ -38,7 +38,7 @@ Inject :php:`AiServiceInterface` and read per-site settings from
 
        public function summarize(string $prompt): string
        {
-           $settings = $this->extensionSettingsService->getAll(self::EXTENSION_KEY, 0);
+           $settings = $this->extensionSettingsService->getAllIgnorePid(self::EXTENSION_KEY);
            if (($settings['enableExtendedAi'] ?? '0') !== '1') {
                throw new \RuntimeException(
                    'Demo AI is disabled. Enable it in AI Foundation → AI Features → T3AF Extended.',
