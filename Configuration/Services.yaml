@@ -13,6 +13,7 @@ services:
       - '../Classes/Mcp/*'
       - '../Classes/Access/*'
       - '../Classes/Provider/*'
+      - '../Classes/AiLabel/*'
 
   # Tag rules apply when Services.php loads Provider/Access classes.
   # ns_t3af’s own _instanceof does not cover foreign packages.

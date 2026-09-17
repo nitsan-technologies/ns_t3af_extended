@@ -34,6 +34,7 @@ inside ns_t3af.
          - '../Classes/Mcp/*'
          - '../Classes/Access/*'
          - '../Classes/Provider/*'
+         - '../Classes/AiLabel/*'
 
      _instanceof:
        NITSAN\NsT3AF\Provider\Contract\AdapterInterface:
@@ -44,7 +45,7 @@ inside ns_t3af.
 Example: Conditional registration when ns_t3af is loaded
 ========================================================
 
-Provider, Access, Prompts, Features, MCP, and runtime AI are registered only when
+Provider, Access, Prompts, Features, MCP, runtime AI, and AI Label are registered only when
 the matching ns_t3af interface is available. MCP tool handlers must be ``public: true``.
 
 .. code-block:: php
@@ -54,12 +55,14 @@ the matching ns_t3af interface is available. MCP tool handlers must be ``public:
 
    declare(strict_types=1);
 
+   use NITSAN\NsT3afExtended\AiLabel\T3afExtendedAiLabelBinder;
    use NITSAN\NsT3afExtended\Feature\T3afExtendedAiFeatureCardProvider;
    use NITSAN\NsT3afExtended\Feature\T3afExtendedExtensionSettingsDynamicDefaultsProvider;
    use NITSAN\NsT3afExtended\Feature\T3afExtendedExtensionSettingsScopeProvider;
    use NITSAN\NsT3afExtended\Feature\T3afExtendedFeatureProviderFormOptions;
    use NITSAN\NsT3afExtended\Mcp\T3afExtendedMcpToolsExtensionCardProvider;
    use NITSAN\NsT3afExtended\Service\T3afExtendedAiService;
+   use NITSAN\NsT3afExtended\Service\T3afExtendedSummarizeAndBindService;
    use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
    return static function (ContainerConfigurator $containerConfigurator): void {
@@ -78,6 +81,8 @@ the matching ns_t3af interface is available. MCP tool handlers must be ``public:
 
        if (interface_exists(\NITSAN\NsT3AF\Api\AiServiceInterface::class)) {
            $services->set(T3afExtendedAiService::class);
+           $services->set(T3afExtendedAiLabelBinder::class);
+           $services->set(T3afExtendedSummarizeAndBindService::class);
        }
 
        if (interface_exists(\NITSAN\NsT3AF\Contract\PromptCatalogProviderInterface::class)) {

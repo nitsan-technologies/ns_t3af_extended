@@ -25,7 +25,7 @@ patterns should do the same.
 
 Third-party extensions register ns_t3af hooks in their own DI configuration.
 This extension keeps tag rules in `Services.yaml` and loads Provider, Access,
-Prompts, Features, MCP, and runtime AI services from `Services.php` only when
+Prompts, Features, MCP, runtime AI, and AI Label services from `Services.php` only when
 the matching ns_t3af interfaces exist.
 
 ```yaml
@@ -52,6 +52,8 @@ if (interface_exists(\NITSAN\NsT3AF\Contract\AiAccessCatalogProviderInterface::c
 }
 if (interface_exists(\NITSAN\NsT3AF\Api\AiServiceInterface::class)) {
     $services->set(T3afExtendedAiService::class);
+    $services->set(T3afExtendedAiLabelBinder::class);
+    $services->set(T3afExtendedSummarizeAndBindService::class);
 }
 if (interface_exists(\NITSAN\NsT3AF\Contract\PromptCatalogProviderInterface::class)) {
     $services->load('NITSAN\\NsT3afExtended\\Prompt\\', __DIR__ . '/../Classes/Prompt/')
@@ -260,5 +262,22 @@ $options = new AiOptions(
 
 return $this->aiService->complete($prompt, $options)->content;
 ```
+
+---
+
+
+
+## AI Label
+
+The working demo is `t3af_extended_summarize_content`: it writes `tt_content.bodytext`
+and binds in the same request via `T3afExtendedAiLabelBinder`.
+
+```php
+// After DataHandler save
+$this->aiLabelBinder->bindContentRecord($uid);
+```
+
+Pass an existing content element uid, then check **AI Foundation → AI Label**.
+`t3af_extended_summarize` returns JSON only and does not bind.
 
 ---

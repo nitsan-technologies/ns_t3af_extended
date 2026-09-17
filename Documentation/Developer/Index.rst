@@ -17,6 +17,7 @@ Use it as a copy-paste starting point for:
 - MCP tools
 - AI Access / permissions
 - :php:`AiServiceInterface` runtime calls
+- AI Label (summarize into ``tt_content`` and bind)
 
 Integration map
 ===============
@@ -50,7 +51,7 @@ Integration map
      - ``Classes/Access/T3afExtendedAccessCatalogProvider.php``
      - ``t3af.ai_access_catalog_provider``
    * - CustomMcpTools.rst
-     - ``Classes/Mcp/Tool/EchoTool.php``, ``SummarizeTool.php``
+     - ``Classes/Mcp/Tool/EchoTool.php``, ``SummarizeTool.php``, ``SummarizeContentTool.php``
      - ``mcp.tool`` (``public: true``)
    * - CustomMcpTools.rst (card)
      - ``Classes/Mcp/T3afExtendedMcpToolsExtensionCardProvider.php``
@@ -58,6 +59,9 @@ Integration map
    * - ExtensionIntegration.rst
      - ``Classes/Service/T3afExtendedAiService.php``
      - inject ``AiServiceInterface``
+   * - AiLabelIntegration.rst
+     - ``Classes/AiLabel/T3afExtendedAiLabelBinder.php``, ``SummarizeContentTool.php``
+     - call after persist / ``mcp.tool``
 
 Verify in the backend
 =====================
@@ -66,5 +70,6 @@ Verify in the backend
 #. **AI Foundation → Providers** — adapter chip **T3AF Extended (stub)**; test connection succeeds.
 #. **AI Prompts** — filter **ns_t3af_extended**; card **T3AF Extended Prompts** with built-in rows.
 #. **AI Features** — card **T3AF Extended**; enable **Enable demo AI features**; save per site.
-#. **MCP Tools** — card **T3AF Extended**; tools ``t3af_extended_echo`` and ``t3af_extended_summarize``.
+#. **MCP Tools** — card **T3AF Extended**; tools ``t3af_extended_echo``, ``t3af_extended_summarize``, ``t3af_extended_summarize_content``.
 #. **AI Access / Roles** — wizard shows **T3AF Extended** module with **Demo summarize** / **Demo echo** bits.
+#. **AI Label** — call ``t3af_extended_summarize_content`` with an existing ``tt_content`` uid; the record appears under **AI Foundation → AI Label** (Texts).

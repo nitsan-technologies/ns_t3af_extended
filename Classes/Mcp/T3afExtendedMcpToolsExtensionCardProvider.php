@@ -32,7 +32,7 @@ final class T3afExtendedMcpToolsExtensionCardProvider implements McpToolsExtensi
             label: 'T3AF Extended',
             icon: '🧪',
             iconIdentifier: 'actions-code',
-            tagline: 'Reference MCP tools for AI Foundation integrators — echo (non-AI) and summarize (AI).',
+            tagline: 'Reference MCP tools — echo, summarize, and summarize-into-content (AI Label bind).',
             skillName: 'T3AF Extended Assistant',
             skillTrigger: '/t3af-extended',
             skillFile: 't3af-extended-skill.md',
